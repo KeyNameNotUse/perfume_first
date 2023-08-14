@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.Survey">
+
+	<insert id="insertSurvey" parameterType="survey">
+		insert into answer
+		values
+		( surveyseq.nextval, #{id}, #{ansGender}, #{ans1}, #{ans2},
+		#{prodname}, sysdate)
+	</insert>
+
+	<select id="ProductImage" parameterType="map"
+		resultType="product">
+		select * from product where prodgender = ${ansGender} and prodans1 like
+		'%${ans1}%' and prodans2 like '%${ans2}%'
+
+	</select>
+
+	<select id="surveyList" parameterType="string"
+		resultType="survey">
+		select * from ( select rownum rnum, a.* from (
+		select * from answer where id = #{id}
+		order by ser desc) a)
+	</select>
+
+	<select id="AnswerDoughnut" parameterType="int" resultType="survey">
+		select  ans1, count(*) doughnut from answer
+		where ansGender = #{ansGender}
+		group by  ans1
+		order  by  1
+	</select>
+
+</mapper>
